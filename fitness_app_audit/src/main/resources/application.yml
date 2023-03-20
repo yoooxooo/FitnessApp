@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password: root
+    url: jdbc:postgresql://db:5432/audits
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: audits
+    hibernate:
+      ddl-auto: none
+
+
+

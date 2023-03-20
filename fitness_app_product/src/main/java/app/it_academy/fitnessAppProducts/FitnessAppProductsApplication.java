@@ -1,0 +1,13 @@
+package app.it_academy.fitnessAppProducts;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FitnessAppProductsApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FitnessAppProductsApplication.class, args);
+	}
+
+}

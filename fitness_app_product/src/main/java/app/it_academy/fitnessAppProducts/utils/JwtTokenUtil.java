@@ -2,10 +2,12 @@ package app.it_academy.fitnessAppProducts.utils;
 
 import app.it_academy.fitnessAppProducts.config.properties.JwtProperties;
 import io.jsonwebtoken.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.UUID;
 
+@Component
 public class JwtTokenUtil {
 
 

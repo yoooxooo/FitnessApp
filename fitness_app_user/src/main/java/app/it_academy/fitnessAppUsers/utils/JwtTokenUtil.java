@@ -4,12 +4,14 @@ import app.it_academy.fitnessAppUsers.config.properties.JwtProperties;
 import app.it_academy.fitnessAppUsers.domain.User;
 import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class JwtTokenUtil {
 
     private final JwtProperties properties;

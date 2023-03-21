@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface RecipeMapper {
 
         @Mapping(target = "creationDate", expression = "java(java.time.Instant.now())")
-        @Mapping(target = "updateDate", expression = "java(java.time.Instant.now())")
+        @Mapping(target = "updateDate", expression = "java(recipe.getCreationDate())")
         @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
         @Mapping(target = "weight", expression = "java(recipe.updateEntityInfo())")
         Recipe createEntity(CreateRecipeDto dto);

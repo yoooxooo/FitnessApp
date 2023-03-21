@@ -4,9 +4,13 @@ package app.it_academy.fitnessAppUsers.core.dto.userDto;
 import app.it_academy.fitnessAppUsers.domain.User;
 import app.it_academy.fitnessAppUsers.domain.UserRole;
 import app.it_academy.fitnessAppUsers.domain.UserStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 public class UpdateUserDto {
+
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private String mail;
     private String fio;
@@ -63,6 +67,8 @@ public class UpdateUserDto {
         }
         if (password == null) {
             password = user.getPassword();
+        } else {
+            password = encoder.encode(password);
         }
         if (status == null) {
             status = user.getStatus();

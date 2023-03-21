@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "audit", url = "${feign.url.audit}")
 public interface AuditFeignClient {
 
-    @PostMapping(path = "/audit")
+    @PostMapping(path = "/audit/sys")
     public ResponseEntity<String> createAudit(@RequestBody CreateAuditDto auditDto);
 }

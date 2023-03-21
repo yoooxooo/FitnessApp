@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: root
-    password: root
-    url: jdbc:postgresql://db:5432/audits
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
 
   jpa:
     properties:
@@ -12,5 +12,7 @@ spring:
     hibernate:
       ddl-auto: none
 
-
+feign:
+  url:
+    users: ${FEIGN_USER}
 

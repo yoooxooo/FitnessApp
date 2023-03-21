@@ -1,5 +1,6 @@
 package app.it_academy.fitnessAppProducts.service;
 
+import app.it_academy.fitnessAppProducts.core.audit.annotations.Audited;
 import app.it_academy.fitnessAppProducts.core.dto.pageDto.PageDto;
 import app.it_academy.fitnessAppProducts.core.dto.productDto.CreateProductDto;
 import app.it_academy.fitnessAppProducts.core.dto.productDto.ProductDto;
@@ -47,22 +48,24 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void createProduct(CreateProductDto productDto) {
+    @Audited(operationType = "CREATION", essenceType = "PRODUCT")
+    public UUID createProduct(CreateProductDto productDto) {
         List<ErrorObject> errors;
         if ((errors = productDto.checkFields()).isEmpty()) {
-            repository.save(mapper.createEntity(productDto));
+            return repository.save(mapper.createEntity(productDto)).getId();
         } else {
             throw new FieldValidationException("Validation Error", errors);
         }
     }
 
     @Override
-    public void updateProduct(UUID uuid, Instant updateLastTime, CreateProductDto productDto) {
+    @Audited(operationType = "UPDATE", essenceType = "PRODUCT")
+    public UUID updateProduct(UUID uuid, Instant updateLastTime, CreateProductDto productDto) {
         Product bufferedProduct = findById(uuid);
         Long checkUpdateTimeLong = bufferedProduct.getUpdateDate().getEpochSecond();
         Long lastUpdateTimeLong = updateLastTime.getEpochSecond();
         if (lastUpdateTimeLong.equals(checkUpdateTimeLong)) {
-            repository.save(mapper.updateProduct(productDto.combine(bufferedProduct), bufferedProduct));
+            return repository.save(mapper.updateProduct(productDto.combine(bufferedProduct), bufferedProduct)).getId();
         } else throw new OptimisticLockException("Сущность уже была изменена");
     }
 

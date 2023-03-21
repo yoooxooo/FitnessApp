@@ -1,5 +1,6 @@
 package app.it_academy.fitnessAppProducts.service;
 
+import app.it_academy.fitnessAppProducts.core.audit.annotations.Audited;
 import app.it_academy.fitnessAppProducts.core.dto.pageDto.PageDto;
 import app.it_academy.fitnessAppProducts.core.dto.recipeDto.CreateRecipeDto;
 import app.it_academy.fitnessAppProducts.core.dto.recipeDto.RecipeDto;
@@ -60,24 +61,22 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
-    public void createRecipe(CreateRecipeDto recipeDto) {
+    @Audited(operationType = "CREATION", essenceType = "RECIPE")
+    public UUID createRecipe(CreateRecipeDto recipeDto) {
         List<ErrorObject> errors;
         if ((errors = recipeDto.checkFields()).isEmpty()) {
             List<ProductPortion> portions = new ArrayList<>();
             checkProducts(recipeDto, portions);
             recipeDto.setComposition(portions);
-            repository.save(recipeMapper.createEntity(recipeDto));
+            return repository.save(recipeMapper.createEntity(recipeDto)).getId();
         } else {
             throw new FieldValidationException("Validation Error", errors);
         }
-        List<ProductPortion> portions = new ArrayList<>();
-        checkProducts(recipeDto, portions);
-            recipeDto.setComposition(portions);
-            repository.save(recipeMapper.createEntity(recipeDto));
     }
 
     @Override
-    public void updateRecipe(UUID uuid, Instant updateLastTime, CreateRecipeDto recipeDto) {
+    @Audited(operationType = "UPDATE", essenceType = "RECIPE")
+    public UUID updateRecipe(UUID uuid, Instant updateLastTime, CreateRecipeDto recipeDto) {
         Recipe bufferedRecipe = repository.findById(uuid).orElseThrow();
         List<ProductPortion> portions = new ArrayList<>();
         Long checkUpdateTimeLong = bufferedRecipe.getUpdateDate().getEpochSecond();
@@ -85,7 +84,7 @@ public class RecipeService implements IRecipeService {
         if (lastUpdateTimeLong.equals(checkUpdateTimeLong)) {
             checkProducts(recipeDto, portions);
             recipeDto.setComposition(portions);
-            repository.save(recipeMapper.updateRecipe(recipeDto.combine(bufferedRecipe), bufferedRecipe));
+            return repository.save(recipeMapper.updateRecipe(recipeDto.combine(bufferedRecipe), bufferedRecipe)).getId();
         } else throw new OptimisticLockException("Сущность уже была изменена");
     }
 

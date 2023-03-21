@@ -39,7 +39,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, OptimisticLockException.class})
+    @ExceptionHandler({IllegalArgumentException.class, OptimisticLockException.class,
+            NullPointerException.class})
     public ResponseEntity<List<SingleErrorResponse>> handleIllegalArgumentException(
             RuntimeException ex) {
         SingleErrorResponse errorResponse = new SingleErrorResponse(ERROR, ex.getMessage());

@@ -37,16 +37,15 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .accessDeniedHandler(
                         (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_FORBIDDEN,
-                                    ex.getMessage());
+                            response.setStatus(
+                                    HttpServletResponse.SC_FORBIDDEN
+                            );
                         }
                 )
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
+                            response.setStatus(
+                                    HttpServletResponse.SC_UNAUTHORIZED
                             );
                         }
                 )
@@ -55,7 +54,7 @@ public class SecurityConfig {
         // Set permissions on endpoints
         http.authorizeHttpRequests((requests) -> requests
                 // Our private endpoints
-                .requestMatchers(HttpMethod.POST, "/audit").permitAll()
+                .requestMatchers(HttpMethod.POST, "/audit/sys").permitAll()
                 .requestMatchers("/audit/**").hasRole("ADMIN")
                 .anyRequest().authenticated());
 

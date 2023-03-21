@@ -43,8 +43,7 @@ public class AuditAspect {
         CreateAuditDto auditDto = new CreateAuditDto();
         auditDto.setAction(audited.operationType());
         auditDto.setType("USER");
-        FullUserDto user = userService.getSingleUser(uuid);
-        auditDto.setEssenceId(user.getId());
+        auditDto.setEssenceId(uuid);
         AuditUserDto auditUserDto = new AuditUserDto();
         if(userHolder.getSecurity() == "anonymousUser") {
             User system = this.system.getSystem();

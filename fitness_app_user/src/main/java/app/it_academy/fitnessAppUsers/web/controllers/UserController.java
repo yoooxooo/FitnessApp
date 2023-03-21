@@ -6,7 +6,6 @@ import app.it_academy.fitnessAppUsers.core.dto.userDto.RegisterByAdminUserDto;
 import app.it_academy.fitnessAppUsers.core.dto.userDto.UpdateUserDto;
 import app.it_academy.fitnessAppUsers.service.api.IUserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +47,11 @@ public class UserController {
     ) {
         service.updateUser(uuid, localDateTime, userDto);
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping (path = "/sys/get_user")
+    public ResponseEntity<FullUserDto> getActionUser(@RequestBody UUID uuid) {
+        return ResponseEntity.ok().body(service.getSingleUser(uuid));
     }
 
 }

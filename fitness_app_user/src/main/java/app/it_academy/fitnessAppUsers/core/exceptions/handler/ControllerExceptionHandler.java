@@ -60,7 +60,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<List<SingleErrorResponse>> handleNoElementException(
             NoSuchElementException ex) {
-        SingleErrorResponse errorResponse = new SingleErrorResponse(ERROR, "Пользователя с данной почтой не существует");
+        SingleErrorResponse errorResponse = new SingleErrorResponse(ERROR, "Данного пользователя не существует");
         return ResponseEntity.badRequest().body(List.of(errorResponse));
     }
 

@@ -61,8 +61,7 @@ public class UserService implements IUserService {
         List<ErrorObject> errors;
         if ((errors = userDto.checkFields()).isEmpty()) {
             User user = userMapper.createEntity(userDto);
-            dao.save(user);
-            return user.getId();
+            return dao.save(user).getId();
         } else {
             throw new FieldValidationException("Validation Error", errors);
         }
@@ -72,12 +71,14 @@ public class UserService implements IUserService {
     @Audited(operationType = "UPDATE")
     public UUID updateUser(UUID uuid, Instant updateLastTime, UpdateUserDto userDto) {
         User bufferedUser = dao.findById(uuid).orElseThrow();
-            Long checkUpdateTimeLong = bufferedUser.getUpdateDate().getEpochSecond();
-            Long lastUpdateTimeLong = updateLastTime.getEpochSecond();
-            if (lastUpdateTimeLong.equals(checkUpdateTimeLong)) {
-                User user = userMapper.updateUser(userDto.combine(bufferedUser), bufferedUser);
-                dao.save(user);
-                return user.getId();
-            } else throw new OptimisticLockException("Сущность уже была изменена");
+        if(bufferedUser.getMail().equals("SYSTEM@SYSTEM.SYSTEM")) {
+            throw new OptimisticLockException("Системного пользователя нельзя изменять");
+        }
+        Long checkUpdateTimeLong = bufferedUser.getUpdateDate().getEpochSecond();
+        Long lastUpdateTimeLong = updateLastTime.getEpochSecond();
+        if (lastUpdateTimeLong.equals(checkUpdateTimeLong)) {
+            User user = userMapper.updateUser(userDto.combine(bufferedUser), bufferedUser);
+            return dao.save(user).getId();
+        } else throw new OptimisticLockException("Сущность уже была изменена");
     }
 }

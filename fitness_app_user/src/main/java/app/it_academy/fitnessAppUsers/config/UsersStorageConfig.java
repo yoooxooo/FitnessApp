@@ -33,25 +33,17 @@ public class UsersStorageConfig {
             system.setMail("SYSTEM@SYSTEM.SYSTEM");
             system.setPassword("SYSTEM");
             manager.createUser(system);
+        } catch (RuntimeException e) {
+            //всё ок, уже есть
+        }
 
+        try {
             RegisterByAdminUserDto admin = new RegisterByAdminUserDto();
             admin.setRole(UserRole.ADMIN);
             admin.setFio("ADMIN");
             admin.setMail("ADMINMAIL@mail.ru");
             admin.setPassword("1122334455");
             manager.createUser(admin);
-
-        } catch (RuntimeException e) {
-            //всё ок, уже есть
-        }
-
-        try {
-        RegisterByAdminUserDto system = new RegisterByAdminUserDto();
-        system.setRole(UserRole.ADMIN);
-        system.setFio("SYSTEM");
-        system.setMail("SYSTEM@SYSTEM.SYSTEM");
-        system.setPassword("SYSTEM");
-        manager.createUser(system);
         } catch (RuntimeException e) {
             //всё ок, уже есть
         }

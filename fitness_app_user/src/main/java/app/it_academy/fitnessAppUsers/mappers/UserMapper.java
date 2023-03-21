@@ -39,7 +39,7 @@ public interface UserMapper {
     @Mapping(target = "fio", source = "dto.fio")
     @Mapping(target = "role", source = "dto.role")
     @Mapping(target = "status", source = "dto.status")
-    @Mapping(target = "password", expression = "java(encoder.encode(dto.getPassword()))")
+    @Mapping(target = "password", source = "dto.password")
     User updateUser(UpdateUserDto dto, User oldUser);
 
     @Mapping(target = "userName", source = "user.mail")

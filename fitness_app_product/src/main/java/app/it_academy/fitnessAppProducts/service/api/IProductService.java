@@ -13,9 +13,9 @@ public interface IProductService {
 
     PageDto<ProductDto> getAllProducts(Integer pageNumber, Integer pageSize);
 
-    void createProduct(CreateProductDto productDto);
+    UUID createProduct(CreateProductDto productDto);
 
-    void updateProduct(UUID uuid, Instant updateLastTime, CreateProductDto productDto);
+    UUID updateProduct(UUID uuid, Instant updateLastTime, CreateProductDto productDto);
 
     Product findById(UUID uuid);
 }

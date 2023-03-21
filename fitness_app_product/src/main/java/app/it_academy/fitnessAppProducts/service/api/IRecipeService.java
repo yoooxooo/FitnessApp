@@ -12,7 +12,7 @@ public interface IRecipeService {
 
     PageDto<RecipeDto> getAllRecipes(Integer page, Integer size);
 
-    void createRecipe(CreateRecipeDto productDto);
+    UUID createRecipe(CreateRecipeDto productDto);
 
-    void updateRecipe(UUID uuid, Instant updateLastTime, CreateRecipeDto productDto);
+    UUID updateRecipe(UUID uuid, Instant updateLastTime, CreateRecipeDto productDto);
 }

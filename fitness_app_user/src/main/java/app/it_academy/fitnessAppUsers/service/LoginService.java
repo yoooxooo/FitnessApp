@@ -48,8 +48,7 @@ public class LoginService implements ILoginService {
     public UUID register(RegisterUserDto userDto) {
         List<ErrorObject> errors;
         if ((errors = userDto.checkFields()).isEmpty()) {
-            dao.save(userMapper.createEntity(userDto));
-            User user = dao.findByMail(userDto.getMail()).orElseThrow();
+            User user = dao.save(userMapper.createEntity(userDto));
             mailFeignClient.sendSecret(user.getMail(), user.getId());
             return user.getId();
         } else {
@@ -64,8 +63,7 @@ public class LoginService implements ILoginService {
         StringBuilder str = new StringBuilder(user.getId().toString());
         if ((str.reverse().toString()).equals(key)) {
             user.setStatus(UserStatus.ACTIVATED);
-            dao.save(user);
-            return user.getId();
+            return dao.save(user).getId();
         } else throw new IllegalArgumentException("Секретный ключ верификации неправильный");
     }
 
@@ -86,5 +84,6 @@ public class LoginService implements ILoginService {
     public FullUserDto getCurrentUser() {
         return userService.getSingleUser(userHolder.getUser().getId());
     }
+
 
 }

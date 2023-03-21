@@ -35,13 +35,17 @@ public class LoginService implements ILoginService {
     private final UserHolder userHolder;
     private final MailFeignClient mailFeignClient;
 
-    public LoginService(LoginRepository dao, IUserService userService, UserMapper userMapper, PasswordEncoder encoder, UserHolder userHolder, MailFeignClient mailFeignClient) {
+    private final JwtTokenUtil jwtTokenUtil;
+
+    public LoginService(LoginRepository dao, IUserService userService, UserMapper userMapper,
+                        PasswordEncoder encoder, UserHolder userHolder, MailFeignClient mailFeignClient, JwtTokenUtil jwtTokenUtil) {
         this.dao = dao;
         this.userService = userService;
         this.userMapper = userMapper;
         this.encoder = encoder;
         this.userHolder = userHolder;
         this.mailFeignClient = mailFeignClient;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
     @Override
     @Audited(operationType = "CREATION")
@@ -74,7 +78,7 @@ public class LoginService implements ILoginService {
             User user = dao.findByMail(loginDto.getMail()).orElseThrow();
             if (user.getStatus() == UserStatus.ACTIVATED) {
                 if (encoder.matches(loginDto.getPassword(), user.getPassword())) {
-                    return JwtTokenUtil.generateAccessToken(user);
+                    return jwtTokenUtil.generateAccessToken(user);
                 } else throw new IllegalArgumentException("Пароль неверный");
             } else throw new DeniedAccessException("Данный аккаунт не активирован");
         } throw new FieldValidationException("Validation Error", errors);

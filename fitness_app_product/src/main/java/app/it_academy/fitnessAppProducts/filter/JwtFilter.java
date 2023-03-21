@@ -24,7 +24,10 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 public class JwtFilter extends OncePerRequestFilter {
 
 
-    public JwtFilter() {
+    private final JwtTokenUtil jwtTokenUtil;
+
+    public JwtFilter(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
-        if (!JwtTokenUtil.validate(token)) {
+        if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
@@ -50,9 +53,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
             UserDetailsUuid userDetails = new UserDetailsImp();
 
-            userDetails.setUserName(JwtTokenUtil.getUsername(token));
-            userDetails.setRoles(List.of(new SimpleGrantedAuthority(JwtTokenUtil.getRole(token))));
-            userDetails.setId(JwtTokenUtil.getId(token));
+            userDetails.setUserName(jwtTokenUtil.getUsername(token));
+            userDetails.setRoles(List.of(new SimpleGrantedAuthority(jwtTokenUtil.getRole(token))));
+            userDetails.setId(jwtTokenUtil.getId(token));
 
             UsernamePasswordAuthenticationToken
                     authentication = new UsernamePasswordAuthenticationToken(

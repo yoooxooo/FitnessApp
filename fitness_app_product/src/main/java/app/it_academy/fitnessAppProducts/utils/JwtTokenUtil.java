@@ -1,5 +1,6 @@
 package app.it_academy.fitnessAppProducts.utils;
 
+import app.it_academy.fitnessAppProducts.config.properties.JwtProperties;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
@@ -7,46 +8,51 @@ import java.util.UUID;
 
 public class JwtTokenUtil {
 
-    private static final String jwtSecret = "A1SDO2WM1QD009iJ";
+
+    private final JwtProperties properties;
+
+    public JwtTokenUtil(JwtProperties properties) {
+        this.properties = properties;
+    }
 
 
-    public static String getUsername(String token) {
+    public String getUsername(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(properties.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
 
         return claims.getSubject();
     }
 
-    public static String getRole(String token) {
+    public String getRole(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(properties.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
         return claims.get("Role", String.class);
     }
 
-    public static UUID getId(String token) {
+    public UUID getId(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(properties.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
         return UUID.fromString(claims.get("Id", String.class));
     }
 
-    public static Date getExpirationDate(String token) {
+    public Date getExpirationDate(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(properties.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
 
         return claims.getExpiration();
     }
 
-    public static boolean validate(String token) {
+    public boolean validate(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(properties.getSecret()).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
             //logger.error("Invalid JWT signature - {}", ex.getMessage());

@@ -16,3 +16,6 @@ feign:
   url:
     users: ${FEIGN_USER}
 
+jwt:
+  secret: ${JWT_SECRET}
+

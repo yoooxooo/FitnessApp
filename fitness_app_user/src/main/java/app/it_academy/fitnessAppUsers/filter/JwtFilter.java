@@ -30,9 +30,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final UserMapper mapper;
 
-    public JwtFilter(UserDetailsService userManager, UserMapper userMapper) {
+    private final JwtTokenUtil jwtTokenUtil;
+
+    public JwtFilter(UserDetailsService userManager, UserMapper userMapper, JwtTokenUtil jwtTokenUtil) {
         this.userManager = userManager;
         this.mapper = userMapper;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @Override
@@ -49,13 +52,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
-        if (!JwtTokenUtil.validate(token)) {
+        if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
         // Get user identity and set it on the spring security context
-        Optional<User> optionalUser = userManager.findUserByUsername(JwtTokenUtil.getUsername(token));
+        Optional<User> optionalUser = userManager.findUserByUsername(jwtTokenUtil.getUsername(token));
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
             UserDetailsUuid userDetails = mapper.getUserDetails(user);
